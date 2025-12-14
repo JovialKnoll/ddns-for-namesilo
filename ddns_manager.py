@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import xml.etree.ElementTree as ETree
 from time import strftime
@@ -45,21 +47,18 @@ from sendgrid.helpers.mail import *
 
 # Domains and hosts to update.
 domains_and_hosts = (
-    ["arebenji.com", ["home"]],
-    ["arebenji.online", ["home"]],
-    ["benjaminrosner.com", [""]],
-    ["r-ben.com", ["", "freedom"]]
+    ["PUT_URL_HERE", ["", "www"]],
 )
 
 record_ttl = "3600"
 
 # Outgoing Email Settings
-send_mail = True
-send_time = int(strftime('%I')) % 8 == 0  # Send an email at 8AM and 8PM.  Set to True to always send.
-email_from_address = "no-reply@freedom-mail.r-ben.com"
-email_from_name = "Freedom-Systems Admin"
-email_to_addresses = ["benrosner@gmail.com"]
-subject = "DNS update notification, timestamped: " + strftime('%x %H:%M:%S')  # Subject line.
+send_mail = False
+send_time = False
+email_from_address = ""
+email_from_name = ""
+email_to_addresses = [""]
+subject = ""
 
 #######################################################################################################################
 #######################################################################################################################
@@ -67,7 +66,7 @@ subject = "DNS update notification, timestamped: " + strftime('%x %H:%M:%S')  # 
 #######################################################################################################################
 #######################################################################################################################
 namesilo_api_key = os.environ.get('NAMESILO_API_KEY')
-NAMESILO_COM_API = 'https://www.namesilo.com/api'
+NAMESILO_COM_API = 'https://www.namesilo.com/apibatch'
 NAMESILO_API_IMPLEMENTED_OPERATIONS = {'dnsListRecords', 'dnsUpdateRecord', 'dnsAddRecord', 'dnsDeleteRecord'}
 
 _web_worker = requests.session()  # Requests session instance.
