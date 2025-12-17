@@ -182,7 +182,11 @@ class NameSilo_APIv1:
             print(f'DDNS successfully updated {host['host']}')
         print(f'DDNS update complete for {self.domain}. {_count} hosts required updates. {_failed} errors.')
 
-        # List for hosts that reuire an record create.
+        # List for hosts that require an record create.
+        print("DEBUG")
+        print(self.hosts)
+        print(self.current_records)
+        print("END DEBUG")
         hosts_requiring_adds = [
             host for host
             in self.hosts.keys()
