@@ -153,10 +153,8 @@ class NameSilo_APIv1:
             record for record
             in self.current_records
             if record['host'] in self.hosts.keys()
-               and (
-                   record['type'] == type
-                   and record['value'] != value
-               )
+            and record['type'] == type
+            and record['value'] != value
         )
 
         # Now iterate and send requests to the endpoint to update those hosts.
