@@ -252,6 +252,7 @@ class NameSilo_APIv1:
 
 def update_records():
     print(f"DDNS operation started at {strftime('%x %H:%M:%S')}")
+    print(f"current IP address is {_current_ip}")
     for domain, hosts in domains_and_hosts:
         NameSilo_APIv1(domain, hosts).dynamic_dns_update(_current_ip)
 
