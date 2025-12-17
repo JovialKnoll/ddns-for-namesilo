@@ -192,7 +192,7 @@ class NameSilo_APIv1:
             in self.hosts.items()
             if not any(
                 record.get('host', None) == host[1]
-                or (record.get('host', None) == '@' and host[1] = "")
+                or (record.get('host', None) == '@' and host[1] == "")
                 for record
                 in self.current_records)
         ]
