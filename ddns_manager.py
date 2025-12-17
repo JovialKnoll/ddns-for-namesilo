@@ -6,19 +6,9 @@ from time import strftime
 import ipaddress
 
 import requests
-from sendgrid import *
-from sendgrid.helpers.mail import *
 
 # NameSilo API Python3 Implementation - Specifically for DDNS support.
 # NameSilo Dynamic DNS IP Address Updater.
-# Email integration is provided by SendGrid (https://www.sendgrid.com).
-#
-# DATE: 19 AUG 2017
-# VERSION: 1.088
-# REQUIRES:
-# - Python >= 3.5.2,
-# - Requests (http://docs.python-requests.org/) `pip install requests`
-# - SendGrid (https://github.com/sendgrid/sendgrid-python) for basic email support if desired. `pip install sendgrid`
 #
 # Copyright (c) 2017 Benjamin Rosner
 #
@@ -49,16 +39,7 @@ from sendgrid.helpers.mail import *
 domains_and_hosts = (
     ["PUT_URL_HERE", ["", "www"]],
 )
-
 record_ttl = "3600"
-
-# Outgoing Email Settings
-send_mail = False
-send_time = False
-email_from_address = ""
-email_from_name = ""
-email_to_addresses = [""]
-subject = ""
 
 #######################################################################################################################
 #######################################################################################################################
@@ -274,14 +255,6 @@ class NameSilo_APIv1:
             self.domain, _count, _failed))
         self.retrieve_resource_records()  # re-populate.
 
-#######################################################################################################################
-#######################################################################################################################
-#  STOP EDITING!                 You're done!  Congratulations.  Now give us a whirl!                   STOP EDITING! #
-#######################################################################################################################
-#######################################################################################################################
-# In development, too tired.
-_log = []
-
 
 def log(message):
     print(message)
@@ -292,30 +265,6 @@ def update_records():
     log("DDNS operation started at {}".format(strftime('%x %H:%M:%S')))
     for domain, hosts in domains_and_hosts:
         NameSilo_APIv1(domain, hosts).dynamic_dns_update(_current_ip)
-    if send_mail and send_time:
-        send_message()
-
-
-def build_message():
-    """Builds an outgoing message."""
-    outgoing_mail = Mail()
-    outgoing_mail.from_email = Email(email_from_address, email_from_name)
-    outgoing_mail.subject = subject
-    personalization = Personalization()
-    for recipient in email_to_addresses:
-        personalization.add_to(Email(recipient))
-    outgoing_mail.add_personalization(personalization)
-    outgoing_mail.add_content(Content("text/plain", str.join('\n', _log)))
-    outgoing_mail.add_content(Content("text/html", "<html><body> {} </body></html>".format(str.join(' <br /> ', _log))))
-    return outgoing_mail.get()
-
-
-def send_message():
-    """Sends a built outgoing message."""
-    # @todo validation & error handling.
-    sg = SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-    log("Message generated and sent at {}".format(strftime('%x %H:%M:%S')))
-    sg.client.mail.send.post(request_body=build_message())
 
 
 if __name__=="__main__":
