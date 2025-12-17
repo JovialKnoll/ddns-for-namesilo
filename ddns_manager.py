@@ -162,6 +162,7 @@ class NameSilo_APIv1:
         # Now iterate and send requests to the endpoint to update those hosts.
         _count = 0
         _failed = 0
+        print(f'hosts_requiring_updates: {hosts_requiring_updates}')
         for host in hosts_requiring_updates:
             print(f'DDNS update required for {host['host']}')
             __api_params = {
