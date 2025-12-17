@@ -188,9 +188,13 @@ class NameSilo_APIv1:
         print(self.current_records)
         print("END DEBUG")
         hosts_requiring_adds = [
-            host for host
-            in self.hosts.keys()
-            if not any(record.get('host', None) == host for record in self.current_records)
+            host[0] for host
+            in self.hosts.items()
+            if not any(
+                record.get('host', None) == host[1]
+                or (record.get('host', None) == '@' and host[1] = "")
+                for record
+                in self.current_records)
         ]
         print(f'DDNS add required for {hosts_requiring_adds}')
         for host in hosts_requiring_adds:
