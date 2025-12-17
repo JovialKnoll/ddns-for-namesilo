@@ -27,7 +27,7 @@ import requests
 # SOFTWARE.
 #
 # Your ISP likely does not provide you a static IP address.
-# One of this scripts purposes is to allow you to update your DYNAMIC IP to NameSilo's nameservers.  DDNS.
+# One of this scripts purposes is to allow you to update your DYNAMIC IP to NameSilo's nameservers.
 # NameSilo does not natively support DDNS service but has a robust API that we use.
 #
 # Original inspiration and thanks: http://www.forkrobotics.com/2014/10/dynamic-dns-with-namesilo-and-powershell/
@@ -55,7 +55,7 @@ _web_worker = requests.session()  # Requests session instance.
 
 class NameSilo_APIv1:
     def __init__(self, domain, hosts=None):
-        print('NameSilo connection called for {} at {}.'.format(domain, strftime('%x %H:%M:%S')))
+        print(f'NameSilo connection called for {domain} at {strftime('%x %H:%M:%S')}.')
         self.domain = domain
         self._namesilo_api_params = {
             'version': '1',
@@ -112,14 +112,14 @@ class NameSilo_APIv1:
             except AttributeError:
                 raise ValueError('Could not parse API response.')
             if success != '300':
-                raise ValueError('API Operation failed with code {}.'.format(success))
+                raise ValueError(f'API Operation failed with code {success}.')
             return _ret
         else:
-            raise NotImplementedError('Invalid operation: {} is currently unsupported or undefined.'.format(operation))
+            raise NotImplementedError(f'Invalid operation: {operation} is currently unsupported or undefined.')
 
     def retrieve_resource_records(self):
         """Retrieve current Resource Records from NameSilo for self.domain."""
-        print('Retrieving records for {}'.format(self.domain))
+        print(f'Retrieving records for {self.domain}')
         current_records = self._api_connection('dnsListRecords')
         self.current_records = []
         for current_resource_record in current_records.iter('resource_record'):
@@ -130,7 +130,7 @@ class NameSilo_APIv1:
                     in current_resource_record.iter()
                 )
             )
-        print('{} records retrieved for {}'.format(len(self.current_records), self.domain))
+        print(f'{len(self.current_records)} records retrieved for {self.domain}')
         print(self.current_records)
 
     def dynamic_dns_update(self, value, type=None):
@@ -141,13 +141,13 @@ class NameSilo_APIv1:
             try:
                 ip_address = ipaddress.ip_address(value)
             except ValueError:
-                print('{} is not a valid IPv4/IPv6 address, type must be given'.format(value))
+                print(f'{value} is not a valid IPv4/IPv6 address, type must be given')
                 return
             if(ip_address.version == 4):
                 type = 'A'
             else:
                 type = 'AAAA'
-        print('DDNS update starting for domain: {} and record type {}'.format(self.domain, type))
+        print(f'DDNS update starting for domain: {self.domain} and record type {type}')
         # Generator for hosts that require an record update.
         hosts_requiring_updates = (
             record for record
@@ -163,7 +163,7 @@ class NameSilo_APIv1:
         _count = 0
         _failed = 0
         for host in hosts_requiring_updates:
-            print('DDNS update required for {}'.format(host['host']))
+            print(f'DDNS update required for {host['host']}')
             __api_params = {
                 'rrid': host['record_id'],
                 'rrhost': self.hosts[host['host']],
@@ -173,17 +173,16 @@ class NameSilo_APIv1:
             try:
                 self._api_connection('dnsUpdateRecord', **__api_params)
             except ValueError:
-                print('DDNS failed to update {}'.format(host['host']))
+                print(f'DDNS failed to update {host['host']}')
                 _failed += 1
                 pass
             except NotImplementedError:
-                print('DDNS failed to update {}'.format(host['host']))
+                print(f'DDNS failed to update {host['host']}')
                 _failed += 1
                 pass
             _count += 1
-            print('DDNS successfully updated {}'.format(host['host']))
-        print('DDNS update complete for {}.  {} hosts required updates. {} errors.'.format(
-            self.domain, _count, _failed))
+            print(f'DDNS successfully updated {host['host']}')
+        print(f'DDNS update complete for {self.domain}. {_count} hosts required updates. {_failed} errors.')
 
         # List for hosts that reuire an record create.
         hosts_requiring_adds = [
@@ -191,7 +190,7 @@ class NameSilo_APIv1:
             in self.hosts.keys()
             if not any(record.get('host', None) == host for record in self.current_records)
         ]
-        print('DDNS add required for {}'.format(hosts_requiring_adds))
+        print(f'DDNS add required for {hosts_requiring_adds}')
         for host in hosts_requiring_adds:
             self.dynamic_dns_add(self.hosts[host], value, type)
 
@@ -205,22 +204,18 @@ class NameSilo_APIv1:
         try:
             self._api_connection('dnsAddRecord', **__api_params)
         except ValueError:
-            print('DDNS failed to add {}, type {}, value {}'.format(host_without_domain, 
-            type, value))
+            print(f'DDNS failed to add {host_without_domain}, type {type}, value {value}')
             return
         except NotImplementedError:
-            print('DDNS failed to add {}, type {}, value {}'.format(host_without_domain, 
-            type, value))
+            print(f'DDNS failed to add {host_without_domain}, type {type}, value {value}')
             return
-        print('DDNS successfully add {}, type {}, value {}'.format(host_without_domain, 
-            type, value))
+        print(f'DDNS successfully added {host_without_domain}, type {type}, value {value}')
         self.retrieve_resource_records()  # re-populate.
 
     # Any of the parameter can be None and if all of the parameters are None, 
     # means delete all records for this domain
     def dynamic_dns_delete(self, host_without_domain=None, value=None, type=None):
-        print('DDNS delete starting for domain: {}, host {}, type {}, value {}'.format(
-            self.domain, host_without_domain, type, value))
+        print(f'DDNS delete starting for domain: {self.domain}, host {host_without_domain}, type {type}, value {value}')
         hosts_requiring_deletes = []
         for record in self.current_records:
             flag = True
@@ -242,22 +237,21 @@ class NameSilo_APIv1:
             try:
                 self._api_connection('dnsDeleteRecord', **__api_params)
             except ValueError:
-                print('DDNS failed to delete {}'.format(host_without_domain))
+                print(f'DDNS failed to delete {host_without_domain}')
                 _failed += 1
                 pass
             except NotImplementedError:
-                print('DDNS failed to delete {}'.format(host_without_domain))
+                print(f'DDNS failed to delete {host_without_domain}')
                 _failed += 1
                 pass
             _count += 1
-            print('DDNS successfully delete {}'.format(host_without_domain))
-        print('DDNS delete complete for {}.  {} hosts required updates. {} errors.'.format(
-            self.domain, _count, _failed))
+            print(f'DDNS successfully deleted {host_without_domain}')
+        print(f'DDNS delete complete for {self.domain}. {_count} hosts required updates. {_failed} errors.')
         self.retrieve_resource_records()  # re-populate.
 
 
 def update_records():
-    print("DDNS operation started at {}".format(strftime('%x %H:%M:%S')))
+    print(f"DDNS operation started at {strftime('%x %H:%M:%S')}")
     for domain, hosts in domains_and_hosts:
         NameSilo_APIv1(domain, hosts).dynamic_dns_update(_current_ip)
 
