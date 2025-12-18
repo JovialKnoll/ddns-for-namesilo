@@ -224,13 +224,13 @@ class NameSilo_APIv1:
         self.retrieve_resource_records()  # re-populate.
 
 
-def update_records():
+def update_records(current_ip):
     print(f"DDNS operation started at {strftime('%x %H:%M:%S')}")
-    print(f"current IP address is {_current_ip}")
+    print(f"current IP address is {current_ip}")
     for domain, hosts in domains_and_hosts:
-        NameSilo_APIv1(domain, hosts).dynamic_dns_update(_current_ip)
+        NameSilo_APIv1(domain, hosts).dynamic_dns_update(current_ip)
 
 
 if __name__=="__main__":
-    _current_ip = _web_worker.get('https://api.ipify.org/?format=json').json()['ip']  # GET our current IP.
-    update_records()
+    current_ip = _web_worker.get('https://api.ipify.org/?format=json').json()['ip']  # GET our current IP.
+    update_records(current_ip)
