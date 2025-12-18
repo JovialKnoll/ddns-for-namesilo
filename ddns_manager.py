@@ -7,34 +7,6 @@ import ipaddress
 
 import requests
 
-# NameSilo API Python3 Implementation - Specifically for DDNS support.
-# NameSilo Dynamic DNS IP Address Updater.
-#
-# Copyright (c) 2017 Benjamin Rosner
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
-#  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-# and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all copies or substantial portions of
-# the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-# THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-#  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-#
-# Your ISP likely does not provide you a static IP address.
-# One of this scripts purposes is to allow you to update your DYNAMIC IP to NameSilo's nameservers.
-# NameSilo does not natively support DDNS service but has a robust API that we use.
-#
-# Original inspiration and thanks: http://www.forkrobotics.com/2014/10/dynamic-dns-with-namesilo-and-powershell/
-# Created using PyCharm, and Sublime Text 3.
-# This script is not endorsed nor created by NameSilo, LLC., nor  SendGrid, INC.
-########################################################################################################################
-
 # Domains and hosts to update.
 domains_and_hosts = (
     ["PUT_URL_HERE", ["", "www"]],
