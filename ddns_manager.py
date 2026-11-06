@@ -122,6 +122,7 @@ class NameSilo_APIv1:
         print(f'DDNS update starting for domain: {self.domain} and record type {type}')
 
         print()
+        print(self.hosts.keys())
         for record in self.current_records:
             print(f"host: {record['host']}, type: {record['type']}, value: {record['value']}")
         print()
