@@ -74,7 +74,7 @@ class NameSilo_APIv1:
         if operation is not None and operation in NAMESILO_API_IMPLEMENTED_OPERATIONS:
             _api_call = {**html_params, **self._namesilo_api_params}  # Join request parameter dicts.
             _api_url = str.join('/', [NAMESILO_COM_API, operation])  # Build URL with operation.
-            print('API connection:', _api_url, _api_call)
+            # print('API connection:', _api_url, _api_call)
             _ret = _web_worker.get(_api_url, params=_api_call)  # Send the API request.
             _ret.raise_for_status()  # Builtin check for HTTP success.
             _ret = ETree.XML(_ret.text)  # The final form of our return response.
@@ -120,6 +120,9 @@ class NameSilo_APIv1:
             else:
                 type = 'AAAA'
         print(f'DDNS update starting for domain: {self.domain} and record type {type}')
+
+        for record in self.current_records:
+            print(record)
         # Generator for hosts that require an record update.
         hosts_requiring_updates = (
             record for record
