@@ -123,7 +123,7 @@ class NameSilo_APIv1:
 
         print()
         for record in self.current_records:
-            print(record)
+            print(f"host: {record['host']}, type: {record['type']}, value: {record['value']}")
         print()
         # Generator for hosts that require an record update.
         hosts_requiring_updates = (
