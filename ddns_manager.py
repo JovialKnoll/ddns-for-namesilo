@@ -46,7 +46,7 @@ class NameSilo_APIv1:
 
     @domain.setter
     def domain(self, value):
-        if value is not None:  # @todo real validation of domain name.
+        if value is not None:
             self._domain = value
         else:
             raise ValueError('Invalid domain name. Please specify a domain in normal syntax, e.g.: google.com')
@@ -85,7 +85,8 @@ class NameSilo_APIv1:
                 )
             )
         print(f'{len(self.current_records)} records retrieved for {self.domain}')
-        print(self.current_records)
+        for record in self.current_records:
+            print(record)
 
     def dynamic_dns_update(self, value, type=None):
         """Dynamic DNS updater"""
@@ -102,11 +103,6 @@ class NameSilo_APIv1:
             else:
                 type = 'AAAA'
         print(f'DDNS update starting for domain: {self.domain} and record type {type}')
-
-        print()
-        for record in self.current_records:
-            print(f"host: {record['host']}, type: {record['type']}, value: {record['value']}")
-        print()
         # Generator for hosts that require an record update.
         hosts_requiring_updates = (
             record for record
