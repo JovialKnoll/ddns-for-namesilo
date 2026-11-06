@@ -87,6 +87,7 @@ class NameSilo_APIv1:
         print(f'{len(self.current_records)} records retrieved for {self.domain}')
         for record in self.current_records:
             print(record)
+        print()
 
     def dynamic_dns_update(self, value, type=None):
         """Dynamic DNS updater"""
