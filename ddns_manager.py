@@ -121,8 +121,10 @@ class NameSilo_APIv1:
                 type = 'AAAA'
         print(f'DDNS update starting for domain: {self.domain} and record type {type}')
 
+        print()
         for record in self.current_records:
             print(record)
+        print()
         # Generator for hosts that require an record update.
         hosts_requiring_updates = (
             record for record
